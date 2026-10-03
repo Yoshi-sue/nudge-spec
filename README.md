@@ -44,6 +44,7 @@ npm run verify-tx -- teoahLGnD98H2tZoFjFNNfFujEF8JZ1y6KKjFAYVsT3zJraeTRoHqntFJwp
 - 同じアテステーションを複数の購買に使うことを、どこまで許すべきか（§8-1）
 - 複数の推薦者の寄与をどう表すか（§8-4）
 - `m` を支払先アドレスに縛るべきか（§7）
+- 推薦の中身をどこまで公開してよいか。誰でも検証できることとプライバシーを、どう両立させるか（§7, §8-6）
 
 ## License
 
