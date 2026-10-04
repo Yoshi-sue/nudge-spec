@@ -1,7 +1,7 @@
 import { parseArgs } from "node:util";
 import { Connection } from "@solana/web3.js";
 import { decodeMemo, verifyAttestation } from "./attestation.ts";
-import { extractMemoFromTransaction, extractPaymentFromTransaction } from "./solana.ts";
+import { extractMemoFromTransaction, extractPaymentFromTransaction, extractReferralPayout } from "./solana.ts";
 
 // Circle's devnet USDC, used by the public demo.
 const DEVNET_USDC_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
@@ -30,14 +30,28 @@ if (!tx) {
   process.exit(1);
 }
 
-const payment = extractPaymentFromTransaction(tx, values.mint!);
 const memo = extractMemoFromTransaction(tx);
 const referral = memo ? decodeMemo(memo) : null;
 const referralSignatureValid = referral ? verifyAttestation(referral) : false;
 
+// SPEC.md §12: a payout only counts when it goes to the signer of a valid attestation.
+const payment = extractPaymentFromTransaction(tx, values.mint!, referral?.pk);
+const referralPayout =
+  referral && referralSignatureValid ? extractReferralPayout(tx, values.mint!, referral.pk) : null;
+
 console.log(
   JSON.stringify(
-    { signature, payment, referral, verified: { paymentFound: payment !== null, referralSignatureValid } },
+    {
+      signature,
+      payment,
+      referral,
+      referralPayout,
+      verified: {
+        paymentFound: payment !== null,
+        referralSignatureValid,
+        referralPaidInSameTx: referralPayout !== null,
+      },
+    },
     null,
     2,
   ),

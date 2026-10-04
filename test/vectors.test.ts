@@ -9,6 +9,7 @@ import {
   verifyAttestation,
   type ReferralAttestation,
 } from "../src/attestation.ts";
+import { computeSplit } from "../src/payout.ts";
 
 // SPEC.md §9
 const SEED = Uint8Array.from({ length: 32 }, (_, i) => i);
@@ -68,4 +69,12 @@ test("fields containing '|' are rejected on both sides (§3, §8-3)", () => {
 
 test("unknown versions are not accepted (§11)", () => {
   assert.equal(decodeMemo(JSON.stringify({ ...VECTOR, v: 2 })), null);
+});
+
+// SPEC.md §12
+test("referral split: 2% of 1 USDC, rounding goes to the merchant", () => {
+  assert.deepEqual(computeSplit(1_000_000, 200, true), { merchantAmount: 980_000, referralAmount: 20_000 });
+  assert.deepEqual(computeSplit(999, 200, true), { merchantAmount: 980, referralAmount: 19 });
+  assert.deepEqual(computeSplit(1_000_000, 200, false), { merchantAmount: 1_000_000, referralAmount: 0 });
+  assert.deepEqual(computeSplit(1_000_000, 0, true), { merchantAmount: 1_000_000, referralAmount: 0 });
 });

@@ -8,6 +8,7 @@ Built for agentic commerce: when an AI agent pays (e.g. over x402), there is no 
 
 - **Spec:** [SPEC.md](SPEC.md) (v1 draft, Japanese; English translation planned)
 - **Live verifier (devnet):** https://nudge-sigma-lime.vercel.app/
+- **Optional same-tx payout (§12):** the recommender's fee is paid in the same transaction as the purchase, so a merchant cannot accept the proof and then not pay.
 - **Status:** v1 draft. Known limitations are listed in SPEC.md §8 — read them before using this for real payouts.
 
 ---
@@ -46,6 +47,7 @@ npm run verify-tx -- teoahLGnD98H2tZoFjFNNfFujEF8JZ1y6KKjFAYVsT3zJraeTRoHqntFJwp
 - `m` を支払先アドレスに縛るべきか（§7）
 - 推薦の中身をどこまで公開してよいか。誰でも検証できることとプライバシーを、どう両立させるか（§7, §8-6）
 - ゼロ知識証明が必要になる相手や場面はあるか。今はコミットメントで足りると考えている（§8-6）
+- 同じ tx での紹介料の支払い（§12）と、推薦の中身を隠すこと（§8-6）を両立させる方法
 
 ## License
 
